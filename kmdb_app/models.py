@@ -9,10 +9,16 @@ class Movies(models.Model):
     classification = models.IntegerField()
     synopsis = models.CharField(max_length=255)
 
+    def __str__(self) -> str:
+        return f"<Movies: {self.title}>"
+
 
 class Genres(models.Model):
     name = models.CharField(max_length=255)
     movies = models.ManyToManyField(Movies, related_name="genres")
+
+    def __str__(self) -> str:
+        return f"<Genres: {self.name}>"
 
 
 class Reviews(models.Model):
@@ -21,3 +27,6 @@ class Reviews(models.Model):
     review = models.CharField(max_length=255)
     spoilers = models.BooleanField()
     movie = models.ForeignKey(Movies, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return f"<Reviews: {self.review}>"
