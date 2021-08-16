@@ -5,7 +5,6 @@ from rest_framework.test import APITestCase
 
 from ..models import Movies
 from ..serializers import MoviesSerializer
-from ..views import MovieViewSet
 
 fake = Faker()
 
@@ -26,9 +25,6 @@ class MovieViewsTest(APITestCase):
         cls.movie = cls.movies[0]
 
     def test_can_browse_all_movies(self):
-        # import ipdb
-
-        # ipdb.set_trace()
         response = self.client.get(reverse("movies:movies-list"))
 
         self.assertEquals(status.HTTP_200_OK, response.status_code)
@@ -36,3 +32,12 @@ class MovieViewsTest(APITestCase):
 
         for mov in self.movies:
             self.assertIn(MoviesSerializer(instance=mov).data, response.data)
+
+    def test_can_read_a_specific_movies(self):
+        # (5)
+        response = self.client.get(
+            reverse("movies:movies-detail", args=[self.movie.id])
+        )
+
+        self.assertEquals(status.HTTP_200_OK, response.status_code)
+        self.assertEquals(MoviesSerializer(instance=self.movie).data, response.data)
