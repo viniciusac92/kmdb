@@ -1,9 +1,11 @@
+from django.urls import reverse
 from faker import Faker
 from rest_framework import status
 from rest_framework.test import APITestCase
 
 from ..models import Movies
 from ..serializers import MoviesSerializer
+from ..views import MovieViewSet
 
 fake = Faker()
 
@@ -24,10 +26,13 @@ class MovieViewsTest(APITestCase):
         cls.movie = cls.movies[0]
 
     def test_can_browse_all_movies(self):
-        response = self.client.get(reversed("movies:movie-list"))
+        # import ipdb
+
+        # ipdb.set_trace()
+        response = self.client.get(reverse("movies:movies-list"))
 
         self.assertEquals(status.HTTP_200_OK, response.status_code)
         self.assertEquals(len(self.movies), len(response.data))
 
-        for mov in movies:
+        for mov in self.movies:
             self.assertIn(MoviesSerializer(instance=mov).data, response.data)

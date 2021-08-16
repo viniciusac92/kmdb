@@ -6,4 +6,4 @@ from .serializers import MoviesSerializer
 
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movies.objects.all()
-    serializer = MoviesSerializer
+    serializer_class = MoviesSerializer
