@@ -1,1 +1,1 @@
-from .movie_service import movie_genre
+from .movie_genre_service import movie_genre_service

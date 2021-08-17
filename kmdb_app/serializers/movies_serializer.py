@@ -22,12 +22,12 @@ class MoviesSerializer(serializers.ModelSerializer):
             'genres',
         ]
 
-        # extra_kwargs = {'id': {'read_only': True}}
+        extra_kwargs = {'id': {'read_only': True}}
 
-        depth = 1
+        # depth = 1
 
-    def create(self, validated_data):
-        import ipdb
+    # def create(self, validated_data):
+    #     import ipdb
 
-        ipdb.set_trace()
-        return movie_genre(**validated_data)
+    #     ipdb.set_trace()
+    #     return movie_genre(**validated_data)
