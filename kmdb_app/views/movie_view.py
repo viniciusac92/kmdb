@@ -14,6 +14,20 @@ class MovieViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
+        import ipdb
+
+        ipdb.set_trace()
         serializer.is_valid(raise_exception=True)
-        ready_serializer = movie_genre_service(serializer)
-        return Response(ready_serializer.validated_data, status=status.HTTP_201_CREATED)
+        # self.perform_create(serializer)
+        retrieve_data = movie_genre_service(serializer)
+        # serializer.validated_data.pop('genres')
+        # movie_data = Movies.objects.get_or_create(**serializer.validated_data)[0]
+        # movie_data.genres.set(genres)
+        # import ipdb
+
+        # ipdb.set_trace()
+        # retrieve_data_serialized = self.get_serializer(data=retrieve_data)
+        import ipdb
+
+        ipdb.set_trace()
+        return Response(retrieve_data, status=status.HTTP_201_CREATED)

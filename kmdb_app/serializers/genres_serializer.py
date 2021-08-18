@@ -6,10 +6,9 @@ from ..models import Genres
 class GenresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genres
-        fields = '__all__'
-        read_only_fields = ("id",)
+        fields = ['id', 'name']
         # extra_kwargs = {
-        #     'movies': {'many': True},
+        #     'id': {'read_only': True},
         # }
 
-        depth = 1
+        depth = 2
