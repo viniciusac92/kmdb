@@ -25,7 +25,7 @@ class MovieViewsTest(APITestCase):
         cls.movie = cls.movies[0]
 
     def test_can_browse_all_movies(self):
-        response = self.client.get(reverse("movies:movies-list"))
+        response = self.client.get(reverse("kmdb:movies-list"))
 
         self.assertEquals(status.HTTP_200_OK, response.status_code)
         self.assertEquals(len(self.movies), len(response.data))
@@ -35,9 +35,7 @@ class MovieViewsTest(APITestCase):
 
     def test_can_read_a_specific_movies(self):
         # (5)
-        response = self.client.get(
-            reverse("movies:movies-detail", args=[self.movie.id])
-        )
+        response = self.client.get(reverse("kmdb:movies-detail", args=[self.movie.id]))
 
         self.assertEquals(status.HTTP_200_OK, response.status_code)
         self.assertEquals(MoviesSerializer(instance=self.movie).data, response.data)
