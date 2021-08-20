@@ -13,8 +13,9 @@ class AccountsViewsTest(APITestCase):
     @classmethod
     def setUpTestData(cls):
         cls.accounts = [
-            User.objects.create(
+            User.objects.create_user(
                 username=fake.first_name(),
+                password=fake.first_name(),
                 first_name=fake.name(),
                 last_name=fake.last_name(),
                 is_superuser=fake.boolean(chance_of_getting_true=30),
@@ -26,16 +27,20 @@ class AccountsViewsTest(APITestCase):
         cls.account = cls.accounts[0]
 
     def test_can_browse_all_users(self):
-        response = self.client.get(reverse("kmdb:user-list"))
+        response = self.client.get(reverse("kmdb:accounts-list"))
 
         self.assertEquals(status.HTTP_200_OK, response.status_code)
         self.assertEquals(len(self.accounts), len(response.data))
         for acc in self.accounts:
-            self.assertIn(UsersSerializer(instance=acc).data, response.data)
+            self.assertIn(
+                UsersSerializer(instance=acc).data,
+                response.data,
+            )
 
     def test_can_read_a_specific_users(self):
-        # (5)
-        response = self.client.get(reverse("kmdb:user-detail", args=[self.account.id]))
+        response = self.client.get(
+            reverse("kmdb:accounts-detail", args=[self.account.id])
+        )
 
         self.assertEquals(status.HTTP_200_OK, response.status_code)
         self.assertEquals(UsersSerializer(instance=self.account).data, response.data)
