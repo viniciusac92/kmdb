@@ -1,7 +1,7 @@
 Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
 Operations to perform:
-  Synchronize unmigrated apps: messages, rest_framework, staticfiles
-  Apply all migrations: admin, auth, contenttypes, kmdb_app, sessions
+  Synchronize unmigrated apps: corsheaders, django_extensions, messages, rest_framework, staticfiles
+  Apply all migrations: admin, auth, authtoken, contenttypes, kmdb_app, sessions
 Synchronizing apps without migrations:
   Creating tables...
     Running deferred SQL...
@@ -23,21 +23,29 @@ Running migrations:
   Applying auth.0010_alter_group_name_max_length... OK
   Applying auth.0011_update_proxy_permissions... OK
   Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying authtoken.0001_initial... OK
+  Applying authtoken.0002_auto_20160226_1747... OK
+  Applying authtoken.0003_tokenproxy... OK
   Applying kmdb_app.0001_initial... OK
   Applying sessions.0001_initial... OK
 System check identified no issues (0 silenced).
-test_it_can_be_attached_to_multiple_genres (kmdb_app.tests.MoviesModel2Test) ... ERROR
+test_can_browse_all_users (kmdb_app.tests.test_accounts_view.AccountsViewsTest) ... ok
+test_can_read_a_specific_users (kmdb_app.tests.test_accounts_view.AccountsViewsTest) ... ok
+test_it_can_be_attached_to_multiple_movies (kmdb_app.tests.test_genres_model.GenresModelTest) ... ok
+test_it_has_information_fields (kmdb_app.tests.test_genres_model.GenresModelTest) ... ok
+test_str_models_methods (kmdb_app.tests.test_genres_model.GenresModelTest) ... ok
+test_can_browse_all_movies (kmdb_app.tests.test_movies_view.MovieViewsTest) ... ok
+test_can_read_a_specific_movies (kmdb_app.tests.test_movies_view.MovieViewsTest) ... ok
+test_it_can_be_attached_to_multiple_genres (kmdb_app.tests.test_movies_model.MoviesModelTest) ... ok
+test_it_has_information_fields (kmdb_app.tests.test_movies_model.MoviesModelTest) ... ok
+test_str_models_methods (kmdb_app.tests.test_movies_model.MoviesModelTest) ... ok
+test_it_can_be_attached_to_multiple_movies (kmdb_app.tests.test_reviews_model.ReviewsModelTest) ... ok
+test_it_can_be_attached_to_multiple_users (kmdb_app.tests.test_reviews_model.ReviewsModelTest) ... ok
+test_it_has_information_fields (kmdb_app.tests.test_reviews_model.ReviewsModelTest) ... ok
+test_str_models_methods (kmdb_app.tests.test_reviews_model.ReviewsModelTest) ... ok
 
-======================================================================
-ERROR: test_it_can_be_attached_to_multiple_genres (kmdb_app.tests.MoviesModel2Test)
 ----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/vinicius/Dropbox/KENZIE/Q4/sprint-1/kmdb/kmdb_app/tests.py", line 40, in test_it_can_be_attached_to_multiple_genres
-    self.assertEquals(len(genres), self.movie.genre.count())
-AttributeError: 'Movies' object has no attribute 'genre'
+Ran 14 tests in 1.055s
 
-----------------------------------------------------------------------
-Ran 1 test in 0.009s
-
-FAILED (errors=1)
+OK
 Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
