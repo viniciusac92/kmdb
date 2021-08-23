@@ -8,9 +8,3 @@ from ..serializers import UsersSerializer
 class AccountViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UsersSerializer
-    # authentication_classes = (TokenAuthentication,)
-    # filter_backends = (filters.SearchFilter,)
-    # search_fields = (
-    #     'username',
-    #     'password',
-    # )
