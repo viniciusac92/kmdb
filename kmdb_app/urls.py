@@ -1,7 +1,12 @@
-from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from .views import AccountViewSet, GenreViewSet, LoginViewSet, MovieViewSet
+from .views import (
+    AccountViewSet,
+    GenreViewSet,
+    LoginViewSet,
+    MovieViewSet,
+    ReviewViewSet,
+)
 
 app_name = 'kmdb'
 router = DefaultRouter()
@@ -9,7 +14,7 @@ router.register(r'movies', MovieViewSet)
 router.register(r'genres', GenreViewSet)
 router.register(r'accounts', AccountViewSet, basename='accounts')
 router.register(r'login', LoginViewSet, basename='login')
+router.register(r'reviews', ReviewViewSet)
 
-# urlpatterns = [path('movies/<int:id>/reviews', view_de_exemplo)]
 
 urlpatterns = router.urls
