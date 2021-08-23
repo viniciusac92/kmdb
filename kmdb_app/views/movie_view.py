@@ -1,6 +1,4 @@
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import query
-from kmdb_app.models.review_model import Reviews
+from django.contrib.auth.models import User
 from rest_framework import serializers, status, viewsets
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.decorators import action
@@ -10,8 +8,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 
-from ..models import Movies
-from ..serializers import MoviesSerializer, ReviewsSerializer
+from ..models import Movies, Reviews
+from ..serializers import MoviesSerializer, ReviewsSerializer, UserSerializer
 from ..services import movie_genre_post_service
 
 
@@ -20,9 +18,6 @@ class MovieViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
     serializer_class = MoviesSerializer
-    serializer_action_classes = {
-        'review': ReviewsSerializer,
-    }
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -47,41 +42,44 @@ class MovieViewSet(viewsets.ModelViewSet):
     @action(methods=['POST'], detail=True)
     def review(self, request, *args, **kwargs):
         movie = get_object_or_404(Movies, id=kwargs['pk'])
-        try:
-            review_check = Reviews.objects.filter(movie_id=kwargs['pk'])
+        # import ipdb
 
-            if len(review_check) != 0 and review_check.critic_id == request.user.id:
-                return Response(
-                    {'detail': 'You already made this review.'},
-                    status=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                )
-            import ipdb
-
-            ipdb.set_trace()
-
-            # review = Reviews.objects.get_or_create(request.data, critic)[0]
-
-            serializer = ReviewsSerializer(data=request.data)
-            if not serializer.is_valid():
-                return Response(
-                    {'detail': 'Serializer inválido.'},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-            import ipdb
-
-            ipdb.set_trace()
-            serialized_data = serializer.validated_data
-            review = Review(serialized_data)
-            serializer.is_valid(raise_exception=True)
-            retrieve_data = movie_genre_post_service(serializer)
-            return Response(retrieve_data, status=status.HTTP_201_CREATED)
-        except ObjectDoesNotExist:
+        # ipdb.set_trace()
+        review_check = Reviews.objects.filter(movie_id=kwargs['pk'])
+        if (
+            len(review_check) != 0
+            and review_check[0].__dict__['critic_id'] == request.user.id
+        ):
             return Response(
                 {'detail': 'You already made this review.'},
                 status=status.HTTP_422_UNPROCESSABLE_ENTITY,
             )
-        except:
+
+        serializer = ReviewsSerializer(data=request.data)
+        if not serializer.is_valid():
             return Response(
-                {'detail': 'You already made this review.'},
-                status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                {'detail': 'Serializer inválido.'},
+                status=status.HTTP_400_BAD_REQUEST,
             )
+        serialized_data = serializer.validated_data
+        critic = User.objects.filter(id=request.user.id)
+        # import ipdb
+
+        # ipdb.set_trace()
+        review = Reviews(
+            critic=critic[0],
+            stars=serialized_data['stars'],
+            review=serialized_data['review'],
+            spoilers=serialized_data['spoilers'],
+            movie=movie,
+        )
+        # import ipdb
+
+        # ipdb.set_trace()
+        review.save()
+        import ipdb
+
+        ipdb.set_trace()
+        retrieve_serialized_data = ReviewsSerializer(review)
+
+        return Response(retrieve_serialized_data.data, status=status.HTTP_201_CREATED)

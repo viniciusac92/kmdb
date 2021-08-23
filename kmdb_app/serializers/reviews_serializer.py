@@ -1,14 +1,15 @@
 from rest_framework import serializers
 
 from ..models import Reviews
+from .user_serializer import UserSerializer
 
 
 class ReviewsSerializer(serializers.ModelSerializer):
-    critic_id = serializers.IntegerField(write_only=True)
-    movie_id = serializers.IntegerField(write_only=True)
+    critic = UserSerializer(default=None)
 
     class Meta:
         model = Reviews
-        fields = '__all__'
+        fields = ['id', 'critic', 'stars', 'review', 'spoilers']
+        extra_kwargs = {'id': {'read_only': True}}
 
         depth = 1
