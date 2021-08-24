@@ -45,6 +45,16 @@ class MovieViewSet(viewsets.ModelViewSet):
     def review(self, request, *args, **kwargs):
         if request.method == 'POST':
             movie = get_object_or_404(Movies, id=kwargs['pk'])
+            import ipdb
+
+            ipdb.set_trace()
+            if request.data['stars'] not in range(10):
+                return Response(
+                    {
+                        'detail': 'Stars datafield only takes integers in the range from 1 to 10.'
+                    },
+                    status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                )
             review_check = Reviews.objects.filter(movie_id=kwargs['pk'])
             if len(review_check) != 0:
                 if review_owner_check_service(request, review_check):
@@ -56,7 +66,7 @@ class MovieViewSet(viewsets.ModelViewSet):
             serializer = ReviewsSerializer(data=request.data)
             if not serializer.is_valid():
                 return Response(
-                    {'detail': 'Serializer inválido.'},
+                    {'detail': 'Invalid serializer.'},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
