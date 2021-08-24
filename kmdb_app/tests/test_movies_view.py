@@ -29,12 +29,10 @@ class MovieViewsTest(APITestCase):
 
         self.assertEquals(status.HTTP_200_OK, response.status_code)
         self.assertEquals(len(self.movies), len(response.data))
-
         for mov in self.movies:
             self.assertIn(MoviesSerializer(instance=mov).data, response.data)
 
     def test_can_read_a_specific_movies(self):
-        # (5)
         response = self.client.get(reverse("kmdb:movies-detail", args=[self.movie.id]))
 
         self.assertEquals(status.HTTP_200_OK, response.status_code)
