@@ -1,7 +1,5 @@
-import ipdb
-
 from ..models import Genres, Movies
-from ..serializers import GenresSerializer, MoviesSerializer
+from ..serializers import MoviesSerializer
 
 
 def movie_genre_post_service(serializer_data):
