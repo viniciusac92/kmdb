@@ -17,6 +17,7 @@ class LoginViewSet(viewsets.ModelViewSet):
             password=request.data['password'],
         )
         if user:
+
             token = Token.objects.get_or_create(user=user)[0]
             return Response({'token': token.key}, status=status.HTTP_200_OK)
         return Response({'msg': 'não validou'})
