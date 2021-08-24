@@ -1,20 +1,24 @@
 from django.contrib.auth.models import User
 from rest_framework import status, viewsets
-from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from ..models import Movies, Reviews
+from ..permissions import IsAdminOnly, IsCriticOnly
 from ..serializers import MoviesSerializer, ReviewsSerializer
 from ..services import movie_genre_post_service, review_owner_check_service
 
 
 class MovieViewSet(viewsets.ModelViewSet):
-    queryset = Movies.objects.all()
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes_by_action = {
+        'create': [IsAdminOnly],
+        'destroy': [IsAdminOnly],
+        'review': [IsCriticOnly],
+    }
+    queryset = Movies.objects.all()
     serializer_class = MoviesSerializer
 
     def create(self, request, *args, **kwargs):
@@ -84,3 +88,12 @@ class MovieViewSet(viewsets.ModelViewSet):
             return Response(
                 retrieve_review_serialized.data, status=status.HTTP_201_CREATED
             )
+
+    def get_permissions(self):
+        try:
+            return [
+                permission()
+                for permission in self.permission_classes_by_action[self.action]
+            ]
+        except KeyError:
+            return [permission() for permission in self.permission_classes]
